@@ -1,0 +1,19 @@
+Multithreadings
+
+Desktop:
+    
+    
+    
+    
+ \MOdel:
+    movable obj list, 
+    stationary obj list,
+    
+    collision - contact 2 obj, loss their HP
+    
+    movable oj
+        followable obj (obj mov) eg robot, enemies
+        
+        controlled obj*
+        -
+        

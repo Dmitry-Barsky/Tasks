@@ -13,6 +13,8 @@ import java.util.TimerTask;
 
 import javax.swing.JPanel;
 
+import log.Logger;
+
 public class GameVisualizer extends JPanel
 {
     private final Timer m_timer = initTimer();
@@ -25,7 +27,7 @@ public class GameVisualizer extends JPanel
     
     private volatile double m_robotPositionX = 100;
     private volatile double m_robotPositionY = 100; 
-    private volatile double m_robotDirection = 0; 
+    private volatile double m_robotDirection = Math.PI / 2; 
 
     private volatile int m_targetPositionX = 150;
     private volatile int m_targetPositionY = 100;
@@ -100,15 +102,25 @@ public class GameVisualizer extends JPanel
         double velocity = maxVelocity;
         double angleToTarget = angleTo(m_robotPositionX, m_robotPositionY, m_targetPositionX, m_targetPositionY);
         double angularVelocity = 0;
-        if (angleToTarget > m_robotDirection)
+        //Logger.debug(Double.toString(angleToTarget));
+        double angle = this.asNormalizedRadians(angleToTarget - m_robotDirection);
+        if (angle > Math.PI)
+        	angle -= Math.PI*2;
+        /*if (angleToTarget > m_robotDirection)
         {
-            angularVelocity = maxAngularVelocity;
+            angularVelocity = +maxAngularVelocity;
         }
         if (angleToTarget < m_robotDirection)
         {
             angularVelocity = -maxAngularVelocity;
         }
+        */
         
+        if (angle > 0)
+        	angularVelocity = this.maxAngularVelocity;
+        else if (angle < 0)
+        	angularVelocity = -this.maxAngularVelocity;
+        	
         moveRobot(velocity, angularVelocity, 10);
     }
     

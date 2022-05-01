@@ -1,12 +1,18 @@
 package gui;
 
 import java.awt.Frame;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 public class RobotsProgram
 {
+	public static final ResourceBundle messagesRU = 
+			ResourceBundle.getBundle("resources/MessagesBundle", new Locale("ru", "RU"));
+	
+	
     public static void main(String[] args) {
       try {
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");

@@ -31,7 +31,7 @@ public class MainApplicationFrame extends JFrame
     private final JDesktopPane desktopPane = new JDesktopPane();
     
     public MainApplicationFrame() {
-    	this.setTitle("Hello world");
+    	this.setTitle(RobotsProgram.messagesRU.getString("MainAppTitle"));
         //Make the big window be indented 50 pixels from each edge
         //of the screen.
         int inset = 50;        
@@ -69,7 +69,7 @@ public class MainApplicationFrame extends JFrame
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
-        Logger.debug("Протокол работает");
+        Logger.debug(RobotsProgram.messagesRU.getString("LoggerStartMessage"));
         return logWindow;
     }
     
@@ -119,12 +119,15 @@ public class MainApplicationFrame extends JFrame
     }
     
     private void onCloseAction() {
-    	Object[] params = {"Yes", "No"}; 
+    	Object[] params = {RobotsProgram.messagesRU.getString("YesBtn"), 
+    					   RobotsProgram.messagesRU.getString("NoBtn")}; 
     	
-    	var result = JOptionPane.showOptionDialog(this, "Are you sure?", "Close dialog", 
+    	var result = JOptionPane.showOptionDialog(this, 
+    			RobotsProgram.messagesRU.getString("CloseDialogMessage"), 
+    			RobotsProgram.messagesRU.getString("CloseDialogTitle"), 
     			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
     			params, params[0]);
-    	Logger.debug(Integer.toString(result));
+    	//Logger.debug(Integer.toString(result));
     	if (result == 0) {
     		this.setVisible(false);
     		this.dispose();
@@ -134,58 +137,64 @@ public class MainApplicationFrame extends JFrame
     
     private JMenu getExit() {
     	
-    	JMenu exitMenu = new JMenu("Выход");
+    	JMenu exitMenu = new JMenu(RobotsProgram.messagesRU.getString("ExitText"));
     	exitMenu.setMnemonic(KeyEvent.VK_Q);
     	{
-    		JMenuItem exitItem = new JMenuItem("Exit", KeyEvent.VK_Q);
+    		JMenuItem exitItem = new JMenuItem(
+    				RobotsProgram.messagesRU.getString("ExitText"),
+    				KeyEvent.VK_Q);
     		exitItem.addActionListener((event) -> {
     			onCloseAction();
     		});
     		exitMenu.add(exitItem);
     	}
-    	
-    	//exitMenu.addActionListener((event) -> {this.onCloseAction();});
     	return exitMenu;
     }
     
     private JMenu getTestMenu() {
-    	JMenu testMenu = new JMenu("Тесты");
+    	JMenu testMenu = new JMenu(RobotsProgram.messagesRU.getString("TestsPanel"));
         testMenu.setMnemonic(KeyEvent.VK_T);
         testMenu.getAccessibleContext().setAccessibleDescription(
-                "Тестовые команды");
+        		RobotsProgram.messagesRU.getString("TestsPanelDescription"));
         
         {
-            JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
+            JMenuItem addLogMessageItem = new JMenuItem(
+            		RobotsProgram.messagesRU.getString("TestMessageToLogItem"),
+            		KeyEvent.VK_S);
             addLogMessageItem.addActionListener((event) -> {
-                Logger.debug("Новая строка");
+                Logger.debug(RobotsProgram.messagesRU.getString("TestLogMessage"));
             });
             testMenu.add(addLogMessageItem);
         }
         return testMenu;
     }
     
+    
+    private LookAndFeelOption[] lookAndFeelVariants = {
+    		new LookAndFeelOption(
+    				UIManager.getSystemLookAndFeelClassName(), 
+    				RobotsProgram.messagesRU.getString("ViewModeSystemViewName")),
+    		new LookAndFeelOption(
+    				UIManager.getCrossPlatformLookAndFeelClassName(), 
+    	    		RobotsProgram.messagesRU.getString("ViewModeUniversalViewName"))
+    };
+    
     private JMenu getLookAndFeelMenu() {
-        JMenu lookAndFeelMenu = new JMenu("Режим отображения");
+        JMenu lookAndFeelMenu = new JMenu(RobotsProgram.messagesRU.getString("ViewModePanel"));
         lookAndFeelMenu.setMnemonic(KeyEvent.VK_V);
         lookAndFeelMenu.getAccessibleContext().setAccessibleDescription(
-                "Управление режимом отображения приложения");
+        		RobotsProgram.messagesRU.getString("ViewModePanelDescription"));
         
+        for (LookAndFeelOption option : lookAndFeelVariants)
         {
-            JMenuItem systemLookAndFeel = new JMenuItem("Системная схема", KeyEvent.VK_S);
+            JMenuItem systemLookAndFeel = new JMenuItem(
+            		option.getViewName(),
+            		KeyEvent.VK_S);
             systemLookAndFeel.addActionListener((event) -> {
-                setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                setLookAndFeel(option.getSystemName());
                 this.invalidate();
             });
             lookAndFeelMenu.add(systemLookAndFeel);
-        }
-
-        {
-            JMenuItem crossplatformLookAndFeel = new JMenuItem("Универсальная схема", KeyEvent.VK_S);
-            crossplatformLookAndFeel.addActionListener((event) -> {
-                setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                this.invalidate();
-            });
-            lookAndFeelMenu.add(crossplatformLookAndFeel);
         }
         return lookAndFeelMenu;
     }
