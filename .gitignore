@@ -3,4 +3,7 @@
 /robots/bin/*
 eclipse.bat
 Tasks.txt
-*.java
+*.classpath
+*.project
+*.gitignore
+*.class
