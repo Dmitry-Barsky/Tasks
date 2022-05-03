@@ -8,7 +8,7 @@ public interface Everything { // this name is awful
 
 	public void onCollision();
 	
-	public void getFullBorders();
+	public Iterable<Point> getFullBorders();
 	
 	public Point getMaxBorder();
 	

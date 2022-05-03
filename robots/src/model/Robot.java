@@ -3,22 +3,27 @@ package model;
 import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class Robot implements Everything, PropertyChangeListener {
 
 	private Point position;
 	private Point speed;
 	private Point target;
+	private double direction;
+	private static final double maxVelocity = 0.1;
+	private static final double maxAngularVelocity = 0.01;
+	private static final int length = 10;
+	private static final int Width = 5;
 	
-
+	
+	
 	public Robot(Point initialPosition, Target target) {
 		this.position = initialPosition;
 		this.target = target.getPosition();
 		target.addListener(this);
 	}
-	
-	
-	public double
 	
 	@Override
 	public void step() {
@@ -29,9 +34,9 @@ public class Robot implements Everything, PropertyChangeListener {
             return;
         }
         double velocity = maxVelocity;
-        double angleToTarget = angleTo(positionX, m_robotPositionY, m_targetPositionX, m_targetPositionY);
+        double angleToTarget = angleTo(position.x, position.y, target.x, target.y);
         double angularVelocity = 0;
-        double angle = this.asNormalizedRadians(angleToTarget - m_robotDirection);
+        double angle = this.asNormalizedRadians(angleToTarget - direction);
         if (angle > Math.PI)
         	angle -= Math.PI*2;
         if (angle > 0)
@@ -82,24 +87,23 @@ public class Robot implements Everything, PropertyChangeListener {
     {
         velocity = applyLimits(velocity, 0, maxVelocity);
         angularVelocity = applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
-        double newX = m_robotPositionX + velocity / angularVelocity * 
-            (Math.sin(m_robotDirection  + angularVelocity * duration) -
-                Math.sin(m_robotDirection));
+        double newX = position.x + velocity / angularVelocity * 
+            (Math.sin(direction  + angularVelocity * duration) -
+                Math.sin(direction));
         if (!Double.isFinite(newX))
         {
-            newX = m_robotPositionX + velocity * duration * Math.cos(m_robotDirection);
+            newX = position.x + velocity * duration * Math.cos(direction);
         }
-        double newY = m_robotPositionY - velocity / angularVelocity * 
-            (Math.cos(m_robotDirection  + angularVelocity * duration) -
-                Math.cos(m_robotDirection));
+        double newY = position.y - velocity / angularVelocity * 
+            (Math.cos(direction  + angularVelocity * duration) -
+                Math.cos(direction));
         if (!Double.isFinite(newY))
         {
-            newY = m_robotPositionY + velocity * duration * Math.sin(m_robotDirection);
+            newY = position.y + velocity * duration * Math.sin(direction);
         }
-        m_robotPositionX = newX;
-        m_robotPositionY = newY;
-        double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration); 
-        m_robotDirection = newDirection;
+        position = new Point(round(newX), round(newY));
+        double newDirection = asNormalizedRadians(direction + angularVelocity * duration); 
+        direction = newDirection;
     }
 
     private static double asNormalizedRadians(double angle)
@@ -119,6 +123,44 @@ public class Robot implements Everything, PropertyChangeListener {
     {
         return (int)(value + 0.5);
     }
+
+	@Override
+	public Iterable<Point> getFullBorders() {
+		Point frontLeft = new Point(
+				round(position.x + length/2.0 * Math.cos(direction) + Width/2.0 *Math.cos(direction + Math.PI /2)), 
+				round(position.y + length/2.0 * Math.sin(direction) + Width/2.0 *Math.sin(direction + Math.PI /2)));
+		
+		Point frontRight = new Point(
+				round(position.x + length/2.0 * Math.cos(direction) - Width/2.0 *Math.cos(direction + Math.PI /2)), 
+				round(position.y + length/2.0 * Math.sin(direction) - Width/2.0 *Math.sin(direction + Math.PI /2)));
+		
+		Point backLeft = new Point(
+				round(position.x - length/2.0 * Math.cos(direction) + Width/2.0 *Math.cos(direction + Math.PI /2)), 
+				round(position.y - length/2.0 * Math.sin(direction) + Width/2.0 *Math.sin(direction + Math.PI /2)));
+		
+		Point backRight = new Point(
+				round(position.x - length/2.0 * Math.cos(direction) - Width/2.0 *Math.cos(direction + Math.PI /2)), 
+				round(position.y - length/2.0 * Math.sin(direction) - Width/2.0 *Math.sin(direction + Math.PI /2)));
+		
+		return new ArrayList<Point>() {
+			frontLeft,
+			frontRight,
+			backRight,
+			backLeft
+		};
+	}
+
+	@Override
+	public Point getMaxBorder() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Point getMinBorder() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	
 }

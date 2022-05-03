@@ -14,6 +14,7 @@ import java.util.TimerTask;
 import javax.swing.JPanel;
 
 import log.Logger;
+import model.Everything;
 
 public class GameVisualizer extends JPanel
 {
@@ -192,6 +193,11 @@ public class GameVisualizer extends JPanel
     private static void drawOval(Graphics g, int centerX, int centerY, int diam1, int diam2)
     {
         g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
+    }
+    
+    private void drawObstacle(Graphics2D g, Everything obstacle) 
+    {
+    	
     }
     
     private void drawRobot(Graphics2D g, int x, int y, double direction)

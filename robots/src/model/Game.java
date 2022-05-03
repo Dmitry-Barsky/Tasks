@@ -39,7 +39,6 @@ public class Game{
 		timer.start();
 	}
 	
-	
 	public void gameStop() {
 		timer.stop();
 	}
@@ -73,13 +72,13 @@ public class Game{
 		for (Everything object : movableObjects) {
 			for (Everything obstacle : obstacles) {
 				if (checkCollision(object, obstacle))
-					object.onHit();
+					object.onCollision();
 			}
 			for (Everything movable : movableObjects) {
 				if (movable != object) {
 					if (checkCollision(object, movable))
-						object.onHit();
-						movable.onHit();
+						object.onCollision();
+						movable.onCollision();
 				}
 			}
 		}
