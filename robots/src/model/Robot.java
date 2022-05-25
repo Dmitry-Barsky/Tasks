@@ -1,10 +1,11 @@
 package model;
 
-import java.awt.Point;
+
+import log.Logger;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Robot implements Everything, PropertyChangeListener {
 
@@ -36,27 +37,26 @@ public class Robot implements Everything, PropertyChangeListener {
         double velocity = maxVelocity;
         double angleToTarget = angleTo(position.x, position.y, target.x, target.y);
         double angularVelocity = 0;
-        double angle = this.asNormalizedRadians(angleToTarget - direction);
+        double angle = asNormalizedRadians(angleToTarget - direction);
         if (angle > Math.PI)
         	angle -= Math.PI*2;
         if (angle > 0)
-        	angularVelocity = this.maxAngularVelocity;
+        	angularVelocity = maxAngularVelocity;
         else if (angle < 0)
-        	angularVelocity = -this.maxAngularVelocity;
-        	
+        	angularVelocity = -maxAngularVelocity;
         moveRobot(velocity, angularVelocity, 10);
 	}
 
-	@Override
-	public void onCollision() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void onCollision(Everything other) {
+        Logger.debug("Collision");
+    }
 
-	@Override
+
+    @Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (("target position" == evt.getPropertyName()) && (evt.getNewValue() instanceof Point))
-		target = (Point) evt.getNewValue();
+		if (("target position".equals(evt.getPropertyName())) && (evt.getNewValue() instanceof Point))
+		    target = (Point) evt.getNewValue();
 	}
 	
 	private static double distance(double x1, double y1, double x2, double y2)
@@ -102,8 +102,7 @@ public class Robot implements Everything, PropertyChangeListener {
             newY = position.y + velocity * duration * Math.sin(direction);
         }
         position = new Point(round(newX), round(newY));
-        double newDirection = asNormalizedRadians(direction + angularVelocity * duration); 
-        direction = newDirection;
+        direction = asNormalizedRadians(direction + angularVelocity * duration);
     }
 
     private static double asNormalizedRadians(double angle)
@@ -142,12 +141,12 @@ public class Robot implements Everything, PropertyChangeListener {
 				round(position.x - length/2.0 * Math.cos(direction) - Width/2.0 *Math.cos(direction + Math.PI /2)), 
 				round(position.y - length/2.0 * Math.sin(direction) - Width/2.0 *Math.sin(direction + Math.PI /2)));
 		
-		return new ArrayList<Point>() {
-			frontLeft,
-			frontRight,
-			backRight,
-			backLeft
-		};
+		return Arrays.asList(
+                frontLeft,
+                frontRight,
+                backRight,
+                backLeft
+        );
 	}
 
 	@Override
