@@ -8,4 +8,4 @@ Tasks.txt
 *.gitignore
 *.class
 *.idea
-*.settings
+.idea
