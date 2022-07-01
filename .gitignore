@@ -7,5 +7,5 @@ Tasks.txt
 *.project
 *.gitignore
 *.class
-*.idea
-.idea
+*.idea/
+
